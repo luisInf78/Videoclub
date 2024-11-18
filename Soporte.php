@@ -1,4 +1,6 @@
 <?php
+namespace Dwes\ProyectoVideoclub;
+
 abstract class Soporte implements Resumible{
     private static $IVA = 0.21;
     public $titulo;

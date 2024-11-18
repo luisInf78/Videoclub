@@ -1,4 +1,7 @@
 <?php
+
+use Dwes\ProyectoVideoclub\Videoclub;
+
 include_once "Videoclub.php";
 include_once "CintaVideo.php";
 include_once "Dvd.php";
