@@ -2,7 +2,8 @@
 
 namespace Dwes\ProyectoVideoclub;
 
-
+use Dwes\ProyectoVideoclub\Util\SoporteYaAlquiladoException;
+use Dwes\ProyectoVideoclub\Util\CupoSuperadoException;
 include_once "Soporte.php";
 
 class Cliente {
@@ -19,28 +20,25 @@ class Cliente {
 
     public function alquilar(Soporte $soporte) {
         if (in_array($soporte, $this->soportesAlquilados)) {
-            echo "El soporte ya está alquilado.<br>";
-            return false;
+            throw new SoporteYaAlquiladoException("El soporte ya está alquilado.");
         }
         if (count($this->soportesAlquilados) >= $this->maxAlquilerConcurrente) {
-            echo "No puede alquilar más soportes.<br>";
-            return false;
+            throw new CupoSuperadoException("No se puede alquilar más soportes.");
         }
         $this->soportesAlquilados[] = $soporte;
-        echo "Soporte alquilado: {$soporte->titulo}<br>";
-        return true;
+        $soporte->alquilado = true;
+        return $this; // Encadenamiento
     }
 
-    public function devolver($numero) {
+    public function devolver(int $numero) {
         foreach ($this->soportesAlquilados as $key => $soporte) {
             if ($soporte->numero == $numero) {
                 unset($this->soportesAlquilados[$key]);
-                echo "Soporte devuelto.<br>";
-                return true;
+                $soporte->alquilado = false;
+                return $this; // Encadenamiento
             }
         }
-        echo "El soporte no estaba alquilado.<br>";
-        return false;
+        throw new SoporteNoEncontradoException("El soporte no estaba alquilado.");
     }
 
     public function listaAlquileres() {
